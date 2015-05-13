@@ -1,0 +1,2 @@
+# snort-manifest
+Snort manifest
