@@ -417,9 +417,9 @@ passenger-install-apache2-module --auto &> /dev/null
 #barnyard2 -c /etc/snort/barnyard2.conf -d /var/log/snort/ -f snort.log -w /var/log/snort/eth0/barnyard2.waldo &
 
 echo "
-LoadModule passenger_module /usr/local/lib/ruby/gems/1.9.1/gems/passenger-5.0.4/buildout/apache2/mod_passenger.so
+LoadModule passenger_module /usr/local/lib/ruby/gems/1.9.1/gems/passenger-5.0.7/buildout/apache2/mod_passenger.so
  <IfModule mod_passenger.c>
-   PassengerRoot /usr/local/lib/ruby/gems/1.9.1/gems/passenger-5.0.4
+   PassengerRoot /usr/local/lib/ruby/gems/1.9.1/gems/passenger-5.0.7
    PassengerDefaultRuby /usr/local/bin/ruby
  </IfModule>
  <VirtualHost *:80>
