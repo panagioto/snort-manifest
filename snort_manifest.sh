@@ -2,13 +2,13 @@
 
 
 libdnet_link="http://sourceforge.net/projects/libdnet/files/libdnet/libdnet-1.11/libdnet-1.11.tar.gz"
-daq_link="https://www.snort.org/downloads/snort/daq-2.0.4.tar.gz"
-snort_link="https://snort.org/downloads/snort/snort-2.9.7.2.tar.gz"
+daq_link="https://www.snort.org/downloads/snort/daq-2.0.6.tar.gz"
+snort_link="https://snort.org/downloads/snort/snort-2.9.7.6.tar.gz"
 pulledpork_link="https://pulledpork.googlecode.com/files/pulledpork-0.7.0.tar.gz"
 yaml_link="pyyaml.org/download/libyaml/yaml-0.1.6.zip"
 ruby_link="cache.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p547.tar.gz"
 imagemagick_link="www.imagemagick.org/download/ImageMagick.tar.gz"
-wkhtmltopdf_link="http://sourceforge.net/projects/wkhtmltopdf/files/archive/0.12.0/wkhtmltox-linux-amd64_0.12.0-03c001d.tar.xz/download"
+wkhtmltopdf_link="http://download.gna.org/wkhtmltopdf/0.12/0.12.2.1/wkhtmltox-0.12.2.1_linux-centos6-amd64.rpm"
 
 
 RED=$(tput setaf 1)
@@ -46,15 +46,14 @@ echo
 
 #update and install requiered packages
 printf "Updating and installing required packages"
-yum update -y &> /devnvull
+yum update -y &> /dev/nvull
 
-yum -y install vim wget man make gcc flex bison zlib zlib-devel libpcap libpcap-devel pcre pcre-devel tcpdump gcc-c++ mysql-server mysql mysql-devel libtool perl-libwww-perl perl-Archive-Tar perl-Crypt-SSLeay git gcc libxml2 libxml2-devel libxslt libxslt-devel httpd curl-devel httpd-devel apr-devel apr-util-devel libXrender fontconfig libXext ruby-devel unzip xz &> /dev/null
+yum -y install vim wget man make gcc flex bison zlib zlib-devel libpcap libpcap-devel pcre pcre-devel tcpdump gcc-c++ mysql-server mysql mysql-devel libtool perl-libwww-perl perl-Archive-Tar perl-Crypt-SSLeay git gcc libxml2 libxml2-devel libxslt libxslt-devel httpd curl-devel httpd-devel apr-devel apr-util-devel libXrender fontconfig libXext ruby-devel unzip xz fontconfig-devel libX11-devel libXext-devel libXrender-devel readline-devel urw-fonts fontconfig-devel libX11-devel libXext-devel libXrender-devel readline-devel urw-fonts xorg-x11-fonts-Type1 xorg-x11-fonts-75dpi libjpeg-turbo libpng &> /dev/null
 
 
 printf '%*s' 23 "[$GREEN OK $NORMAL]"
 echo
 echo
-#elegxoi an uparxoun ta apaitoumena paketa
 
 #check for libdnet
 printf 'Checking link for libdnet-1.11'
@@ -69,7 +68,7 @@ else
 fi
 
 #check for daq
-printf 'Checking link for daq-2.0.4'
+printf 'Checking link for daq-2.0.6'
 if curl -s --head  --request GET "$daq_link" | grep "302 Found" > /dev/null
  then
   printf '%*s' 37 "[$GREEN OK $NORMAL]"
@@ -81,7 +80,7 @@ else
 fi
 
 #check for snort
-printf 'Checking link for snort-2.9.7.2'
+printf 'Checking link for snort-2.9.7.6'
 if curl -s --head  --request GET "$snort_link" | grep "302 Found" > /dev/null
  then
   printf '%*s' 33 "[$GREEN OK $NORMAL]"
@@ -141,7 +140,7 @@ fi
 
 #check for wkhtmltopdf
 printf 'Checking link for wkhtmltopdf'
-if curl -s --head  --request GET "$wkhtmltopdf_link" | grep "302 Found" > /dev/null
+if curl -s --head  --request GET "$wkhtmltopdf_link" | grep "200 OK" > /dev/null
  then
   printf '%*s' 35 "[$GREEN OK $NORMAL]"
   echo
@@ -152,8 +151,7 @@ else
 fi
 
 
-######################################################################################################################################################################33
-######################################################################################################################################################################33
+######################################################################################################################################################################
 echo 
 
 #start mysql and set mysql root password
@@ -216,8 +214,6 @@ cd /etc/snort
 chown -R snort:snort *
 chown -R snort:snort /var/log/snort
 
-#####################################################################################################################
-#####################################################################################################################
 #####################################################################################################################
 
 
@@ -285,7 +281,7 @@ cd barnyard2
 make && make install
 } &> /dev/null
 
-#cp /usr/local/etc/barnyard2.conf /etc/snort
+cp /usr/local/etc/barnyard2.conf /etc/snort
 cp etc/barnyard2.conf /etc/snort
 cp rpm/barnyard2 /etc/init.d
 chmod 700 /etc/init.d/barnyard2
@@ -316,7 +312,6 @@ cp etc/* /etc/snort
 
 #pulledpork.conf configuration and set alias to .bashrc for new rules and how to run pulledpork DO NOT FORGET oinkcode
 cp /etc/snort/pulledpork.conf pulledpork.conf_default
-#read -p "Give oinkcode " oinkcode
 
 sed -i[conf] -e '/^local_rules=/s/\/usr.*/\/etc\/snort\/rules\/local.rules/' -e '/^rule_path/s/\/usr.*/\/etc\/snort\/rules\/snort.rules/' \
 	-e '/sid_msg=/s/\/usr.*/\/etc\/snort\/sid-msg.map/' -e '/config_path=/s/\usr.*/\etc\/snort\/snort.conf/' -e '/black_list=/s/\/usr.*/\/etc\/snort\/rules\/iplists\/default.blacklist/' \
@@ -369,13 +364,12 @@ make && make install
 #install wkhtmltopdf
 echo "Installing wkhtmltopdf..."
 cd /usr/local/src
-wget -qO- "$wkhtmltopdf_link" | tar -xJ > /dev/null
-cd wkhtml*
-mv bin/wkhtmltopdf /usr/local/bin
+wget "$wkhtmltopdf_link" &> /dev/null
+rpm -i wkhtml*.rpm &> /dev/null
 
 #now install snorby
 cd /usr/local/src
-git clone https://github.com/Snorby/snorby.git &> /dev/null
+git clone https://github.com/Snorby/snorby.git
 
 #before we install snorby via bundle we have to install another gem called nokogiri and bundler
 echo "Installing ruby gems..."
