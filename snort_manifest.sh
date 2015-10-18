@@ -369,7 +369,7 @@ rpm -i wkhtml*.rpm &> /dev/null
 
 #now install snorby
 cd /usr/local/src
-git clone https://github.com/Snorby/snorby.git
+git clone https://github.com/Snorby/snorby.git &> /dev/null
 
 #before we install snorby via bundle we have to install another gem called nokogiri and bundler
 echo "Installing ruby gems..."
